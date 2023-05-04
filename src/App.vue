@@ -1,8 +1,26 @@
+<script>
+import todos from './data/todos';
+
+export default {
+  data() {
+    return {
+      todos,
+    }
+  },
+  computed: {
+    activeTodos() {
+      return this.todos.filter(todo => !todo.completed);
+    },
+  }
+}
+</script>
+
 <template>
   <div class="todoapp">
-      <header class="header">
-        <h1>todos</h1>
-
+    <h1 class="todoapp__title">todos</h1>
+    <div class="todoapp__content">
+      <header class="todoapp__header">
+        <button class="todoapp__toggle-all" :class="{ active: activeTodos.length === 0 }"></button>
         <form>
           <input
             type="text"
@@ -13,76 +31,67 @@
         </form>
       </header>
 
-      <section class="main">
-        <input
-          type="checkbox"
-          id="toggle-all"
-          class="toggle-all"
-          data-cy="toggleAll"
+      <section class="todoapp__main">
+        <div 
+          v-for="todo, index of todos" 
+          class="todo"
+          :class="{ completed: todo.completed }"
+          :key="todo.id"
+        >
+        <label class="todo__status-label">
+          <input
+            type="checkbox"
+            class="todo__status"
+            v-model="todo.completed"
         />
-        <label htmlFor="toggle-all">Mark all as complete</label>
+        </label>
 
-        <ul class="todo-list" data-cy="todoList">
-          <li>
-            <div class="view">
-              <input type="checkbox" class="toggle" id="toggle-view" />
-              <label htmlFor="toggle-view">asdfghj</label>
-              <button type="button" class="destroy" data-cy="deleteTodo" />
-            </div>
-            <input type="text" class="edit" />
-          </li>
+        <form v-if="false">
+          <input 
+            type="text"
+            class="todo__title-field"
+            placeholder="Empty todo will be deleted"
+            value="Todo is being edited now"
+          />
+        </form>
 
-          <li class="completed">
-            <div class="view">
-              <input type="checkbox" class="toggle" id="toggle-completed" />
-              <label htmlFor="toggle-completed">qwertyuio</label>
-              <button type="button" class="destroy" data-cy="deleteTodo" />
-            </div>
-            <input type="text" class="edit" />
-          </li>
+        <template v-else>
+          <span class="todo__title">{{ todo.title }}</span>
+          <button class="todo__remove" v-on:click="todos.splice(index, 1)">x</button>
+        </template>
 
-          <li class="editing">
-            <div class="view">
-              <input type="checkbox" class="toggle" id="toggle-editing" />
-              <label htmlFor="toggle-editing">zxcvbnm</label>
-              <button type="button" class="destroy" data-cy="deleteTodo" />
-            </div>
-            <input type="text" class="edit" />
-          </li>
+        <!-- <div class="model overlay" :class="{ 'is-active': false }">
+          <div class="modal-background has-background-white-ter"></div>
+          <div class="loader"></div>
+        </div> -->
+      </div>
 
-          <li>
-            <div class="view">
-              <input type="checkbox" class="toggle" id="toggle-view2" />
-              <label htmlFor="toggle-view2">1234567890</label>
-              <button type="button" class="destroy" data-cy="deleteTodo" />
-            </div>
-            <input type="text" class="edit" />
-          </li>
-        </ul>
+        
       </section>
 
-      <footer class="footer">
-        <span class="todo-count" data-cy="todosCounter">
-          3 items left
+      <!-- <footer class="todoapp__footer">
+        <span class="todo-count">
+          {{ activeTodos.lenght }} items left
         </span>
 
-        <ul class="filters">
-          <li>
-            <a href="#/" class="selected">All</a>
-          </li>
+        <nav class="filter">
+          <a href="#/" class="filter__link selected">
+            All
+          </a>
 
-          <li>
-            <a href="#/active">Active</a>
-          </li>
+          <a href="#/active" class="filter__link">
+            Active
+          </a>
 
-          <li>
-            <a href="#/completed">Completed</a>
-          </li>
-        </ul>
+          <a href="#/completed" class="filter__link">
+            Completed
+          </a>
+        </nav>
 
-        <button type="button" class="clear-completed">
+        <button class="todoapp__clear-completed" v-if="activeTodos.length > 0">
           Clear completed
         </button>
-      </footer>
+      </footer> -->
     </div>
+  </div>
 </template>
